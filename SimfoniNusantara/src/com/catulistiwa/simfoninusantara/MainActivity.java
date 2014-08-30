@@ -1,27 +1,28 @@
 package com.catulistiwa.simfoninusantara;
 
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.view.Window;
+import android.widget.LinearLayout;
 
 public class MainActivity extends ActionBarActivity {
-
+	private MainGameView testmap;
+	private DisplayMetrics metrics;
+	private LinearLayout mylayout;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
+		DrawableManager.initInstance(this);
+		metrics = getResources().getDisplayMetrics();
+		testmap = new MainGameView(this, metrics.widthPixels, metrics.heightPixels);
+		mylayout = (LinearLayout) findViewById(R.id.frame1);
+		mylayout.addView(testmap);
 	}
 
 	@Override
@@ -43,22 +44,19 @@ public class MainActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
-		}
+	@Override
+	protected void onPause() {
+		testmap.thread.setRunning(false); // matiin thread
+		Log.d("A", "PAUSE");
+		super.onPause();
 	}
-
+	@Override
+	protected void onResume(){
+		Log.d("A", "RESUME");
+		super.onResume();
+	}
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
 }
