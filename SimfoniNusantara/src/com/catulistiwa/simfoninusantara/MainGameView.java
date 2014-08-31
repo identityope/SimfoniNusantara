@@ -50,7 +50,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		noteButtonImage = DrawableManager.getInstance().getTombolImage();
 		noteImage = DrawableManager.getInstance().getNote1Image();
 		score = 0;
-		music_speed = 36;
+		music_speed = 53;
 		noteButtons = new ArrayList<NoteButton>();
 		noteButtons.add(new NoteButton(sw/2-500,sh/2-110,noteButtonImage));
 		noteButtons.add(new NoteButton(sw/2-450,sh/2,noteButtonImage));
@@ -91,7 +91,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		paint4 = new Paint();
 		paint4.setColor(Color.RED);
 		timeBar = new RectF(150,15,150,30);
-		music1 = MediaPlayer.create(context, R.raw.manuk_dadali);
+		music1 = MediaPlayer.create(context, R.raw.v3_o2jam);
 		music1.setOnPreparedListener(new OnPreparedListener() {
 		    public void onPrepared(MediaPlayer song) {
 		        totalDuration = song.getDuration();
@@ -169,7 +169,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	public void update() {
 		//currentDuration = music1.getCurrentPosition();
 		currentDuration = (int) (System.currentTimeMillis()-begintime);
-		if(!isPlaying && currentDuration>=1000){
+		if(!isPlaying && currentDuration>=0){
 			music1.start();
 			isPlaying = true;
 		}
