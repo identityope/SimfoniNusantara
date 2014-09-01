@@ -1,20 +1,24 @@
 package com.catulistiwa.simfoninusantara;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameLoopThread extends Thread {
 	private boolean running;
 	private SurfaceHolder surfaceHolder;
 	private GameView mainGameView;	
-	private final static int MAX_FPS = 25; //fps yang diinginkan	
-	private final static int MAX_FRAME_SKIPS = 5; //maksimum jumlah frame yang bisa diskip
+	private final static int MAX_FPS = 50; //fps yang diinginkan	
+	private final static int MAX_FRAME_SKIPS = 10; //maksimum jumlah frame yang bisa diskip
 	private final static int FRAME_PERIOD = 1000/MAX_FPS;	
-	
+	//test
+	/*public int BPM = 120;
+	private double BEAT_PERIOD;*/
 	public GameLoopThread(SurfaceHolder surfaceHolder,GameView gameView) {
 		super();
 		this.surfaceHolder = surfaceHolder;
 		this.mainGameView = gameView;
+		//BEAT_PERIOD = 60000/BPM/4;
 	}
 	
 	public void setRunning(boolean val) {
@@ -27,7 +31,7 @@ public class GameLoopThread extends Thread {
 		long timeDiff; //waktu yang diperlukan satu siklus untuk selesai
 		int sleepTime; //ms untuk tidur(<0 jika ketinggalan)
 		int framesSkipped; //jumlah frame yang akan diskip
-		
+		//int beatSkipped;
 		sleepTime = 0;
 		
 		while(running) {
@@ -43,7 +47,7 @@ public class GameLoopThread extends Thread {
 					mainGameView.update();					
 					mainGameView.render(canvas);							
 					//hitung berapa lama satu siklus
-					timeDiff = System.currentTimeMillis() - beginTime;					
+					timeDiff = System.currentTimeMillis() - beginTime;
 					//hitung waktu tidur
 					sleepTime = (int)(FRAME_PERIOD - timeDiff);
 					
@@ -56,7 +60,6 @@ public class GameLoopThread extends Thread {
 						}catch(InterruptedException e) {							
 						}
 					}
-					
 					while(sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
 						//ketinggalan fps, update tanpa manggil render
 						this.mainGameView.update();

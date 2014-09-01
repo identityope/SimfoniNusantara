@@ -23,7 +23,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	public GameLoopThread thread;
 	private Matrix matrix;
 	private int sw,sh;
-	private Paint paint1,paint2,paint3,paint4;
+	private Paint paint1,paint2,paint3,paint4,paint5;
 	private RectF timeBar;
 	//Menyiapkan Gambar-gambar
 	private Bitmap background; //gambar latar belakang
@@ -38,19 +38,22 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	private int score;
 	private long begintime;
 	private boolean isPlaying,isShowBPMLine;
-	private int xline,music_speed;
+	private int xline,music_speed,lastNotePos;
+	private BPMLine bpmline;
 	public MainGameView(Context context, int screenWidth, int screenHeight) {
 		super(context);
 		getHolder().addCallback(this);
 		setFocusable(true);
+		
 		matrix = new Matrix();
 		sw = screenWidth;
 		sh = screenHeight;
-		background = DrawableManager.getInstance().getBackgroundImage();
+		background = DrawableManager.getInstance().getBackgroundImage1();
+		background = DrawableManager.getInstance().ResizeBitmap(background, sh, sw);
 		noteButtonImage = DrawableManager.getInstance().getTombolImage();
 		noteImage = DrawableManager.getInstance().getNote1Image();
 		score = 0;
-		music_speed = 53;
+		music_speed = 10;
 		noteButtons = new ArrayList<NoteButton>();
 		noteButtons.add(new NoteButton(sw/2-500,sh/2-110,noteButtonImage));
 		noteButtons.add(new NoteButton(sw/2-450,sh/2,noteButtonImage));
@@ -60,26 +63,29 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		noteButtons.add(new NoteButton(sw/2+400,sh/2+110,noteButtonImage));
 		//list of note
 		noteList = new ArrayList<Note>();
-		noteList.add(new Note(sw/2,sh/2-110,0,1000,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,2687.5,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,2875,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,4187.5,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,4375,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,12000,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,12500,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,13000,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,13500,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,14000,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,18000,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,18125,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,18250,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,18375,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,18500,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,18625,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,18750,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,18875,noteImage));
-		noteList.add(new Note(sw/2,sh/2-110,0,19000,noteImage));
-		
+		noteList.add(new Note(sw/2,sh/2-110,0,2250,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,2500,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,2750,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,3000,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,3250,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,3500,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,3750,noteImage));		
+		noteList.add(new Note(sw/2,sh/2-110,0,4000,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,4250,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,4500,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,4750,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,5000,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,5250,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,5500,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,5750,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,6000,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,6250,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,6500,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,6750,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,7000,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,7250,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,7500,noteImage));
+		noteList.add(new Note(sw/2,sh/2-110,0,7750,noteImage));
 		visibleNotes = new ArrayList<Note>();
 		paint1 = new Paint();
 		paint1.setColor(Color.WHITE);
@@ -90,18 +96,22 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		paint3.setColor(Color.BLUE);
 		paint4 = new Paint();
 		paint4.setColor(Color.RED);
+		paint5 = new Paint();
+		paint5.setColor(Color.BLACK);
+		paint5.setAlpha(120);
 		timeBar = new RectF(150,15,150,30);
-		music1 = MediaPlayer.create(context, R.raw.v3_o2jam);
+		music1 = MediaPlayer.create(context, R.raw.gnr_track1);
 		music1.setOnPreparedListener(new OnPreparedListener() {
 		    public void onPrepared(MediaPlayer song) {
 		        totalDuration = song.getDuration();
 		        mintime = -1;
 		        //music1.start();
-		        begintime = System.currentTimeMillis();
 		        xline = sw/2;
 		    }
 		});
 		isShowBPMLine= true;
+		bpmline = new BPMLine(sw/2,sh/2-180,120,noteButtonImage);
+		lastNotePos = 0;
 	}
 	
 	@Override
@@ -112,6 +122,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	public void surfaceCreated(SurfaceHolder arg0) {
 		// inisialisasi thread
 		initThread();
+		begintime = System.currentTimeMillis();
 		Log.d(TAG, "surface created ("+sw+"x"+sh+")");
 	}
 
@@ -149,7 +160,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	public void render(Canvas canvas) {				
 		canvas.setMatrix(matrix);
 		canvas.drawColor(Color.BLACK);// clear screen		
-		canvas.drawBitmap(background, 0, 0, null);
+		canvas.drawBitmap(background, 0, 0, paint5);
 		for(int i=0;i<noteButtons.size();i++){
 			noteButtons.get(i).draw(canvas);
 		}
@@ -158,18 +169,20 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		canvas.drawText("Time  "+mintime+":"+zerobuf+sectime, 20, 30, paint1);
 		canvas.drawRect(150, 15, 550, 30, paint2);
 		canvas.drawRect(timeBar, paint3);
-		canvas.drawRect(xline, sh/2-160, xline+1, sh/2-60, paint4);
-		canvas.drawText("Score : "+score, 600, 30, paint1);
+		//canvas.drawRect(xline, sh/2-160, xline+1, sh/2-60, paint4);
+		canvas.drawText("Score : "+score, 1100, 30, paint1);
 		if(!visibleNotes.isEmpty()){
 			for(int i=visibleNotes.size()-1;i>=0;i--){
 				visibleNotes.get(i).draw(canvas);
 			}
 		}
+		bpmline.drawSimple(canvas);
 	}
 	public void update() {
 		//currentDuration = music1.getCurrentPosition();
 		currentDuration = (int) (System.currentTimeMillis()-begintime);
-		if(!isPlaying && currentDuration>=0){
+		bpmline.update(currentDuration);
+		if(!isPlaying && currentDuration>=3000){
 			music1.start();
 			isPlaying = true;
 		}
@@ -179,11 +192,19 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 				xline=sw/2;
 			}
 		}
-		Log.d("Current miliseconds", ""+(System.currentTimeMillis()-begintime)+" ms");
+		//Log.d("Current miliseconds", ""+currentDuration+" ms");
+		
 		sectime = (currentDuration/1000)%60;
 		mintime = (currentDuration/1000)/60;
 		float progresstime = currentDuration*400/totalDuration;
-		timeBar.set(timeBar.left, timeBar.top, timeBar.left+progresstime, timeBar.bottom);
+		if(progresstime<=totalDuration){
+			timeBar.set(timeBar.left, timeBar.top, timeBar.left+progresstime, timeBar.bottom);
+		}
+		if(lastNotePos < noteList.size() && currentDuration >= noteList.get(lastNotePos).getTimePos()){
+			visibleNotes.add(noteList.get(lastNotePos));
+			lastNotePos++;
+		}
+		/*
 		for(int i=0;i<noteList.size();i++){
 			if(currentDuration >= noteList.get(i).getTimePos()){
 				if(!noteList.get(i).isVisible()){
@@ -192,9 +213,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 				}
 			}
 		}
+		*/
 		for(int i=0;i<visibleNotes.size();i++){
 			if(visibleNotes.get(i).getX()<40){
-				//visibleNotes.get(i).hide();
 				visibleNotes.remove(i);
 			}else{
 				visibleNotes.get(i).move(music_speed);
@@ -206,7 +227,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		switch (actioncode) {
 			case MotionEvent.ACTION_DOWN:
 				Log.d(TAG, "down at " + event.getX() + " " + event.getY());
-				score = currentDuration;
 				for(int i=0;i<visibleNotes.size();i++){
 					if(visibleNotes.get(i).getRectangle().contains(event.getX(), event.getY())
 						&& noteButtons.get(0).getRectangle().contains(event.getX(), event.getY())){

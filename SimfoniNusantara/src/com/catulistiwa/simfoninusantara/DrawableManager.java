@@ -16,6 +16,7 @@ public class DrawableManager{
 	private static DrawableManager instance;
 	//Gambar Map
 	private Bitmap background;
+	private Bitmap background1;
 	private Bitmap tombol;
 	private Bitmap note1;
 	private DrawableManager(Context context) {
@@ -40,9 +41,15 @@ public class DrawableManager{
 	}
 	public Bitmap getBackgroundImage() {
 		if (background == null) {
-			background = BitmapFactory.decodeResource(res, R.drawable.bgimage);
+			background = BitmapFactory.decodeResource(res, R.drawable.alam);
 		}
 		return background;
+	}
+	public Bitmap getBackgroundImage1() {
+		if (background1 == null) {
+			background1 = BitmapFactory.decodeResource(res, R.drawable.gnr1);
+		}
+		return background1;
 	}
 	public Bitmap getTombolImage() {
 		if (tombol == null) {

@@ -2,6 +2,8 @@ package com.catulistiwa.simfoninusantara;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
@@ -14,8 +16,10 @@ public class BPMLine {
 	private int currentFrame;   // the current frame
 	private int spriteWidth;    // the width of the sprite to calculate the cut out rectangle
 	private int spriteHeight;   // the height of the sprite
-	
-	public BPMLine(int _x, int _y, Bitmap b) {		
+	//untuk versi sederhana
+	private int linewidth,alpha,bpm,frame_counter,max_counter,prevTime;
+	private Paint paint;
+	public BPMLine(int _x, int _y, int _bpm, Bitmap b) {		
 		bitmap = b;
 		x = _x;
 		y = _y;
@@ -25,10 +29,43 @@ public class BPMLine {
 		spriteHeight = bitmap.getHeight();
 		sourceRect = new Rect(0, 0, spriteWidth, spriteHeight);
 		destRect = new Rect(x-spriteWidth/2, y-spriteHeight/2, x+spriteWidth/2, y+spriteHeight/2);
+		linewidth = 0;
+		alpha = 255;
+		paint = new Paint();
+		paint.setColor(Color.RED);
+		paint.setAlpha(alpha);
+		bpm = _bpm;
+		max_counter = 60000/bpm;
+		frame_counter = 0;
+		prevTime = 0;
 	}
 	public void draw(Canvas canvas) {
 		this.destRect.set(getX()-spriteWidth/2,getY()-spriteHeight/2,getX()+spriteWidth/2,getY()+spriteHeight/2);
 		canvas.drawBitmap(bitmap, sourceRect, destRect, null);
+	}
+	public void drawSimple(Canvas canvas){
+		canvas.drawRect(x-linewidth/2, y, x+linewidth/2, y+350, paint);
+	}
+	public void update(int gameTime){
+		linewidth++;
+		alpha-=10;
+		if(alpha<=0){
+			alpha=0;
+		}
+		paint.setAlpha(alpha);
+		frame_counter = gameTime/max_counter;
+		if(frame_counter>prevTime){
+			resetLineWidth();
+			prevTime=frame_counter;
+		}
+	}
+	public int getCurrentFrame(){
+		return frame_counter;
+	}
+	public void resetLineWidth(){
+		linewidth = 0;
+		alpha = 255;
+		//frame_counter = 0;
 	}
 	public void nextbeat() {
 		currentFrame++;
