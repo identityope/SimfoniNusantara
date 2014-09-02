@@ -51,6 +51,9 @@ public class Note {
 			x += speed;
 		}
 	}
+	public void moveX(double pos){
+		x = (int) pos;
+	}
 	public void setnoteimg(Bitmap nb){
 		noteimg = nb;
 	}

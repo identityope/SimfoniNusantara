@@ -1,14 +1,13 @@
 package com.catulistiwa.simfoninusantara;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameLoopThread extends Thread {
 	private boolean running;
 	private SurfaceHolder surfaceHolder;
 	private GameView mainGameView;	
-	private final static int MAX_FPS = 50; //fps yang diinginkan	
+	private final static int MAX_FPS = 30; //fps yang diinginkan	
 	private final static int MAX_FRAME_SKIPS = 10; //maksimum jumlah frame yang bisa diskip
 	private final static int FRAME_PERIOD = 1000/MAX_FPS;	
 	//test

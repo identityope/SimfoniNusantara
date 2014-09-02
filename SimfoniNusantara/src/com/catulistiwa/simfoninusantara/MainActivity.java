@@ -3,7 +3,6 @@ package com.catulistiwa.simfoninusantara;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -11,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 public class MainActivity extends ActionBarActivity {
-	private MainGameView testmap;
+	private MainGameView gameView;
 	private DisplayMetrics metrics;
 	private LinearLayout mylayout;
 	@Override
@@ -22,9 +21,9 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		DrawableManager.initInstance(this);
 		metrics = getResources().getDisplayMetrics();
-		testmap = new MainGameView(this, metrics.widthPixels, metrics.heightPixels);
+		gameView = new MainGameView(this, metrics.widthPixels, metrics.heightPixels);
 		mylayout = (LinearLayout) findViewById(R.id.frame1);
-		mylayout.addView(testmap);
+		mylayout.addView(gameView);
 	}
 
 	@Override
@@ -48,13 +47,14 @@ public class MainActivity extends ActionBarActivity {
 	}
 	@Override
 	protected void onPause() {
-		testmap.thread.setRunning(false); // matiin thread
-		Log.d("A", "PAUSE");
+		gameView.thread.setRunning(false); // matiin thread
 		super.onPause();
 	}
 	@Override
 	protected void onResume(){
-		Log.d("A", "RESUME");
+		if(gameView.thread != null){
+			gameView.initThread();
+		}
 		super.onResume();
 	}
 	@Override
