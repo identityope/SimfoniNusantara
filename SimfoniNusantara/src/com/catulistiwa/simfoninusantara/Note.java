@@ -3,6 +3,7 @@ package com.catulistiwa.simfoninusantara;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.RectF;
+import android.util.Log;
 
 public class Note {
 	private int x;
@@ -11,6 +12,8 @@ public class Note {
 	private int noteType;
 	private double timePosition;
 	private boolean visible;
+	private int screenWidth = 1280;
+	private int screenHeight = 752;
 	
 	public Note(int _x, int _y, int type, double time, Bitmap note) {		
 		noteimg = note;
@@ -19,6 +22,37 @@ public class Note {
 		noteType = type;
 		timePosition = time;
 		visible = false;
+	}
+	public Note(int type, double time, Bitmap note) {
+		noteimg = note;
+		noteType = type;
+		timePosition = time;
+		visible = false;
+		Log.d("Test", "Width="+screenWidth + " ; Height="+screenHeight);
+		x = screenWidth/2;
+		switch (noteType) {
+		case 0:
+			y = screenHeight/2 - 110;
+			break;
+		case 1:
+			y = screenHeight/2;
+			break;
+		case 2:
+			y = screenHeight/2 + 110;
+			break;
+		case 3:
+			y = screenHeight/2 - 110;
+			break;
+		case 4:
+			y = screenHeight/2;
+			break;
+		case 5:
+			y = screenHeight/2 + 110;
+			break;
+
+		default:
+			break;
+		}
 	}
 	public void draw(Canvas canvas) {
 		canvas.drawBitmap(noteimg, x-noteimg.getWidth()/2, y-noteimg.getHeight()/2, null);
@@ -31,6 +65,9 @@ public class Note {
 	}
 	public int getY(){
 		return y;
+	}
+	public int getType(){
+		return noteType;
 	}
 	public double getTimePos(){
 		return timePosition;
@@ -45,9 +82,9 @@ public class Note {
 		visible = false;
 	}
 	public void move(int speed){
-		if(noteType==0){
+		if(noteType==0 || noteType==1 || noteType==2){
 			x -= speed;
-		}else{
+		}else if (noteType==3 || noteType==4 || noteType==5){
 			x += speed;
 		}
 	}

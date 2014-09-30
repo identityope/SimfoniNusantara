@@ -16,9 +16,13 @@ public class DrawableManager{
 	private static DrawableManager instance;
 	//Gambar Map
 	private Bitmap background;
-	private Bitmap background1;
 	private Bitmap tombol;
 	private Bitmap note1;
+	private Bitmap effect1;
+	private Bitmap notecool;
+	private Bitmap notemiss;
+	private Bitmap timebarBg,timebarFg;
+	private Bitmap buttonBg;
 	private DrawableManager(Context context) {
 		// TODO ganti gambar
 		res = context.getResources();
@@ -41,15 +45,9 @@ public class DrawableManager{
 	}
 	public Bitmap getBackgroundImage() {
 		if (background == null) {
-			background = BitmapFactory.decodeResource(res, R.drawable.alam);
+			background = BitmapFactory.decodeResource(res, R.drawable.gedung_sate);
 		}
 		return background;
-	}
-	public Bitmap getBackgroundImage1() {
-		if (background1 == null) {
-			background1 = BitmapFactory.decodeResource(res, R.drawable.gnr1);
-		}
-		return background1;
 	}
 	public Bitmap getTombolImage() {
 		if (tombol == null) {
@@ -62,6 +60,42 @@ public class DrawableManager{
 			note1 = BitmapFactory.decodeResource(res, R.drawable.note);
 		}
 		return note1;
+	}
+	public Bitmap getEffect1Image() {
+		if (effect1 == null) {
+			effect1 = BitmapFactory.decodeResource(res, R.drawable.note_click_sprite1);
+		}
+		return effect1;
+	}
+	public Bitmap getNoteCool() {
+		if (notecool == null) {
+			notecool = BitmapFactory.decodeResource(res, R.drawable.note_cool);
+		}
+		return notecool;
+	}
+	public Bitmap getNoteMiss() {
+		if (notemiss == null) {
+			notemiss = BitmapFactory.decodeResource(res, R.drawable.note_miss);
+		}
+		return notemiss;
+	}
+	public Bitmap getTimebarBg() {
+		if (timebarBg == null) {
+			timebarBg = BitmapFactory.decodeResource(res, R.drawable.timebarbg);
+		}
+		return timebarBg;
+	}
+	public Bitmap getTimebarFg() {
+		if (timebarFg == null) {
+			timebarFg = BitmapFactory.decodeResource(res, R.drawable.timebarfg);
+		}
+		return timebarFg;
+	}
+	public Bitmap getButtonBg() {
+		if (buttonBg == null) {
+			buttonBg = BitmapFactory.decodeResource(res, R.drawable.buttonback);
+		}
+		return buttonBg;
 	}
 	public static Bitmap ResizeBitmap(Bitmap bm, int newHeight, int newWidth) {
 	    int width = bm.getWidth();
