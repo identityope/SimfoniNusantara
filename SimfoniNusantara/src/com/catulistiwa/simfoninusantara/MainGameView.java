@@ -3,6 +3,7 @@ package com.catulistiwa.simfoninusantara;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -35,6 +36,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	private Bitmap noteEffectImage;
 	private Bitmap timebarBg, timebarFg;
 	private Bitmap buttonBg;
+	private Button buttonBack, buttonPause;
 	private ArrayList<NoteButton> noteButtons; //gambar tombol note
 	private ArrayList<NoteEffect> noteEffects;
 	private NoteIndicator noteIndicator;
@@ -62,20 +64,34 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		timebarBg = DrawableManager.getInstance().getTimebarBg();
 		timebarFg = DrawableManager.getInstance().getTimebarFg();
 		buttonBg = DrawableManager.getInstance().getButtonBg();
+		buttonBack = new Button(sw/2-93,sh-90,buttonBg);
+		buttonPause = new Button(sw/2+93,sh-90,buttonBg);
 		noteButtons = new ArrayList<NoteButton>();
-		noteButtons.add(new NoteButton(sw/2-500,sh/2-110,noteButtonImage));
-		noteButtons.add(new NoteButton(sw/2-450,sh/2,noteButtonImage));
-		noteButtons.add(new NoteButton(sw/2-400,sh/2+110,noteButtonImage));
-		noteButtons.add(new NoteButton(sw/2+500,sh/2-110,noteButtonImage));
-		noteButtons.add(new NoteButton(sw/2+450,sh/2,noteButtonImage));
-		noteButtons.add(new NoteButton(sw/2+400,sh/2+110,noteButtonImage));
+//		noteButtons.add(new NoteButton(sw/2-500,sh/2-110,noteButtonImage));
+//		noteButtons.add(new NoteButton(sw/2-450,sh/2,noteButtonImage));
+//		noteButtons.add(new NoteButton(sw/2-400,sh/2+110,noteButtonImage));
+//		noteButtons.add(new NoteButton(sw/2+500,sh/2-110,noteButtonImage));
+//		noteButtons.add(new NoteButton(sw/2+450,sh/2,noteButtonImage));
+//		noteButtons.add(new NoteButton(sw/2+400,sh/2+110,noteButtonImage));
+		int rangex1 = noteButtonImage.getWidth()/2,
+			rangex2 = noteButtonImage.getWidth()*3/4,
+			rangex3 = noteButtonImage.getWidth(),
+			rangey1 = sh/2-noteButtonImage.getHeight(),
+			rangey2 = sh/2,
+			rangey3 = sh/2+noteButtonImage.getHeight();
+		noteButtons.add(new NoteButton(rangex1,	rangey1,noteButtonImage));
+		noteButtons.add(new NoteButton(rangex2,	rangey2,noteButtonImage));
+		noteButtons.add(new NoteButton(rangex3,	rangey3,noteButtonImage));
+		noteButtons.add(new NoteButton(sw-rangex1,rangey1,noteButtonImage));
+		noteButtons.add(new NoteButton(sw-rangex2,rangey2,noteButtonImage));
+		noteButtons.add(new NoteButton(sw-rangex3,rangey3,noteButtonImage));
 		noteEffects = new ArrayList<NoteEffect>();
-		noteEffects.add(new NoteEffect(sw/2-500,sh/2-110,noteEffectImage));
-		noteEffects.add(new NoteEffect(sw/2-450,sh/2,noteEffectImage));
-		noteEffects.add(new NoteEffect(sw/2-400,sh/2+110,noteEffectImage));
-		noteEffects.add(new NoteEffect(sw/2+500,sh/2-110,noteEffectImage));
-		noteEffects.add(new NoteEffect(sw/2+450,sh/2,noteEffectImage));
-		noteEffects.add(new NoteEffect(sw/2+400,sh/2+110,noteEffectImage));
+		noteEffects.add(new NoteEffect(rangex1,rangey1,noteEffectImage));
+		noteEffects.add(new NoteEffect(rangex2,rangey2,noteEffectImage));
+		noteEffects.add(new NoteEffect(rangex3,rangey3,noteEffectImage));
+		noteEffects.add(new NoteEffect(sw-rangex1,rangey1,noteEffectImage));
+		noteEffects.add(new NoteEffect(sw-rangex2,rangey2,noteEffectImage));
+		noteEffects.add(new NoteEffect(sw-rangex3,rangey3,noteEffectImage));
 		noteIndicator = new NoteIndicator(sw/2,sh/2-210,DrawableManager.getInstance().getNoteCool(),DrawableManager.getInstance().getNoteMiss());
 		paint1 = new Paint();
 		paint1.setColor(Color.WHITE);
@@ -104,60 +120,62 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 		paintcombo.setTextSize(76);
 		paintcombo.setTypeface(Typeface.createFromAsset(context.getAssets(),"fonts/Chunkfive.otf"));
 		paintcombo.setTextAlign(Align.CENTER);
-		timeBar = new RectF(35,18,35,52);
+		timeBar = new RectF(20+timebarBg.getWidth()/30,14+timebarBg.getHeight()/10,20+timebarBg.getWidth()/30,16+timebarBg.getHeight()*9/10);
 		bpmline = new BPMLine(sw/2,sh/2-180,103,noteButtonImage);
 		//list of note
 		noteList = new ArrayList<Note>();
-		noteList.add(new Note(1,5729-100,noteImage));
-		noteList.add(new Note(4,5729-100,noteImage));
+		int delay = 0;
+		noteList.add(new Note(0,5300+delay,noteImage,sw,sh));
+		noteList.add(new Note(3,5300+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,7642+delay,noteImage,sw,sh));
+		noteList.add(new Note(4,7642+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,9967+delay,noteImage,sw,sh));
+		noteList.add(new Note(5,9967+delay,noteImage,sw,sh));
 		
-		noteList.add(new Note(2,7896-100,noteImage));
-		noteList.add(new Note(5,7896-100,noteImage));
-		noteList.add(new Note(1,8164-100,noteImage));
-		noteList.add(new Note(4,8164-100,noteImage));
-		noteList.add(new Note(0,8497-100,noteImage));
-		noteList.add(new Note(3,8497-100,noteImage));
+		noteList.add(new Note(0,12266+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,14643+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,16994+delay,noteImage,sw,sh));
 		
-		noteList.add(new Note(2,10264-100,noteImage));
-		noteList.add(new Note(3,10264-100,noteImage));
-		noteList.add(new Note(1,10530-100,noteImage));
-		noteList.add(new Note(4,10530-100,noteImage));
-		noteList.add(new Note(0,10831-100,noteImage));
-		noteList.add(new Note(5,10831-100,noteImage));
-		
-		noteList.add(new Note(0,12599-100,noteImage));
-		noteList.add(new Note(5,12599-100,noteImage));
-		noteList.add(new Note(1,12865-100,noteImage));
-		noteList.add(new Note(4,12865-100,noteImage));
-		noteList.add(new Note(2,13129-100,noteImage));
-		noteList.add(new Note(3,13129-100,noteImage));
-		
-		noteList.add(new Note(3,14932-100,noteImage));
-		noteList.add(new Note(1,15231-100,noteImage));
-		noteList.add(new Note(0,15530-100,noteImage));
-		noteList.add(new Note(5,15530-100,noteImage));
-		
-		noteList.add(new Note(0,17231-100,noteImage));
-		noteList.add(new Note(4,17566-100,noteImage));
-		noteList.add(new Note(3,17897-100,noteImage));
-		noteList.add(new Note(2,17897-100,noteImage));
-		
-		noteList.add(new Note(2,19599-100,noteImage));
-		noteList.add(new Note(5,19599-100,noteImage));
-		noteList.add(new Note(4,19897-100,noteImage));
-		noteList.add(new Note(0,20164-100,noteImage));
-		noteList.add(new Note(1,20431-100,noteImage));
-		noteList.add(new Note(3,20630-100,noteImage));
+		noteList.add(new Note(0,19345+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,19632+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,19841+delay,noteImage,sw,sh));
+		noteList.add(new Note(3,20102+delay,noteImage,sw,sh));
+		noteList.add(new Note(4,20285+delay,noteImage,sw,sh));
+		noteList.add(new Note(5,20755+delay,noteImage,sw,sh));
+		noteList.add(new Note(4,21121+delay,noteImage,sw,sh));
+		noteList.add(new Note(3,21330+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,21696+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,22009+delay,noteImage,sw,sh));
+		noteList.add(new Note(0,22166+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,22479+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,22662+delay,noteImage,sw,sh));
 
-		noteList.add(new Note(2,21264-100,noteImage));
-		noteList.add(new Note(3,21530-100,noteImage));
-		noteList.add(new Note(3,21832-100,noteImage));
-		noteList.add(new Note(1,22970-100,noteImage));
-		noteList.add(new Note(4,22970-100,noteImage));
-		noteList.add(new Note(2,22363-100,noteImage));
-		noteList.add(new Note(5,22530-100,noteImage));
-		noteList.add(new Note(1,22797-100,noteImage));
-		noteList.add(new Note(4,22964-100,noteImage));
+		noteList.add(new Note(0,26502+delay,noteImage,sw,sh));
+		noteList.add(new Note(5,28723+delay,noteImage,sw,sh));
+		noteList.add(new Note(3,30499+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,31622+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,32850+delay,noteImage,sw,sh));
+		noteList.add(new Note(0,33947+delay,noteImage,sw,sh));
+		noteList.add(new Note(3,35149+delay,noteImage,sw,sh));
+		noteList.add(new Note(4,36324+delay,noteImage,sw,sh));
+		noteList.add(new Note(4,37552+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,38728+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,39877+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,41026+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,42228+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,43377+delay,noteImage,sw,sh));
+		noteList.add(new Note(3,44553+delay,noteImage,sw,sh));
+		noteList.add(new Note(3,45650+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,46277+delay,noteImage,sw,sh));
+		noteList.add(new Note(0,46590+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,46930+delay,noteImage,sw,sh));
+		noteList.add(new Note(2,47165+delay,noteImage,sw,sh));
+		noteList.add(new Note(3,47479+delay,noteImage,sw,sh));
+		noteList.add(new Note(4,48602+delay,noteImage,sw,sh));
+		noteList.add(new Note(5,49777+delay,noteImage,sw,sh));
+		noteList.add(new Note(0,51005+delay,noteImage,sw,sh));
+		noteList.add(new Note(1,52155+delay,noteImage,sw,sh));
+		
 		//Variable dalam Game
 		score = 0;
 		combo = 0;
@@ -255,10 +273,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 			noteIndicator.drawAnim(canvas);
 		}
 		//footer
-		canvas.drawBitmap(buttonBg, sw/2-200, sh-120, null);
-		canvas.drawBitmap(buttonBg, sw/2+15, sh-120, null);
-		canvas.drawText("Kembali", sw/2-109, sh-80, paint6);
-		canvas.drawText("Berhenti", sw/2+107, sh-80, paint6);
+		buttonBack.draw(canvas);
+		buttonPause.draw(canvas);
+		canvas.drawText("Kembali", sw/2-buttonBg.getWidth()/2, sh-80, paint6);
+		canvas.drawText("Berhenti", sw/2+buttonBg.getWidth()/2, sh-80, paint6);
 	}
 	public void update() {
 		currentMusicTime = music1.getCurrentPosition();
@@ -300,6 +318,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 				}
 			}
 		}
+		if(currentDuration>=totalDuration){
+			((Activity) getContext()).finish();
+		}
 	}
 	public boolean onTouchEvent(MotionEvent event) {
 		//final int actioncode = event.getAction() & MotionEvent.ACTION_MASK;	
@@ -311,7 +332,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 	    int maskedAction = event.getActionMasked();
 	    switch (maskedAction) {
 	    	case MotionEvent.ACTION_DOWN:{
-	    		Log.d(TAG, "down at " + event.getX() + " " + event.getY());
+	    		Log.d("TIME", "Time : " + currentMusicTime);
 				for(int i=0;i<noteButtons.size();i++){
 					if(noteButtons.get(i).getRectangle().contains(event.getX(), event.getY())){
 						noteButtons.get(i).buttonDown();
@@ -329,6 +350,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback,
 							}
 					}
 				}
+				if(buttonBack.getRectangle().contains(event.getX(), event.getY())){
+	    			((Activity) getContext()).finish();
+	    		}else if(buttonPause.getRectangle().contains(event.getX(), event.getY())){
+	    			((Activity) getContext()).finish();
+	    		}
 	    		break;
 	    	}
 	    	case MotionEvent.ACTION_POINTER_DOWN: {

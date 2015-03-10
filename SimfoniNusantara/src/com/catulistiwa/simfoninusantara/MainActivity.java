@@ -1,15 +1,21 @@
 package com.catulistiwa.simfoninusantara;
 
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.os.Build;
 
 public class MainActivity extends ActionBarActivity {
 	private MainGameView gameView;
@@ -26,8 +32,8 @@ public class MainActivity extends ActionBarActivity {
 		metrics = getResources().getDisplayMetrics();
 		gameView = new MainGameView(this, metrics.widthPixels, metrics.heightPixels);
 		mylayout = (LinearLayout) findViewById(R.id.frame1);
-		songTitle = (TextView) findViewById(R.id.textView1);
-		songTitle.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/Flavors-Regular.ttf"));
+		//songTitle = (TextView) findViewById(R.id.textView1);
+		//songTitle.setTypeface(Typeface.createFromAsset(getAssets(),"fonts/Flavors-Regular.ttf"));
 		mylayout.addView(gameView);
 	}
 

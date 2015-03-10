@@ -23,31 +23,35 @@ public class Note {
 		timePosition = time;
 		visible = false;
 	}
-	public Note(int type, double time, Bitmap note) {
+	public Note(int type, double time, Bitmap note, int sw, int sh) {
 		noteimg = note;
 		noteType = type;
 		timePosition = time;
 		visible = false;
-		Log.d("Test", "Width="+screenWidth + " ; Height="+screenHeight);
+		screenWidth = sw;
+		screenHeight = sh;
 		x = screenWidth/2;
+		int rangey1 = screenHeight/2-note.getHeight(),
+				rangey2 = screenHeight/2,
+				rangey3 = screenHeight/2+note.getHeight();
 		switch (noteType) {
 		case 0:
-			y = screenHeight/2 - 110;
+			y = rangey1;
 			break;
 		case 1:
-			y = screenHeight/2;
+			y = rangey2;
 			break;
 		case 2:
-			y = screenHeight/2 + 110;
+			y = rangey3;
 			break;
 		case 3:
-			y = screenHeight/2 - 110;
+			y = rangey1;
 			break;
 		case 4:
-			y = screenHeight/2;
+			y = rangey2;
 			break;
 		case 5:
-			y = screenHeight/2 + 110;
+			y = rangey3;
 			break;
 
 		default:

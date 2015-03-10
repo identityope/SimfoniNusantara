@@ -15,7 +15,7 @@ public class DrawableManager{
 	private Resources res;
 	private static DrawableManager instance;
 	//Gambar Map
-	private Bitmap background;
+	private Bitmap background,backgroundmenu;
 	private Bitmap tombol;
 	private Bitmap note1;
 	private Bitmap effect1;
@@ -48,6 +48,12 @@ public class DrawableManager{
 			background = BitmapFactory.decodeResource(res, R.drawable.gedung_sate);
 		}
 		return background;
+	}
+	public Bitmap getBackgroundMenuImage() {
+		if (backgroundmenu == null) {
+			backgroundmenu = BitmapFactory.decodeResource(res, R.drawable.mockup_menu);
+		}
+		return backgroundmenu;
 	}
 	public Bitmap getTombolImage() {
 		if (tombol == null) {
